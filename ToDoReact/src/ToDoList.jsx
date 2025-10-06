@@ -17,8 +17,8 @@ const  ToDoList = () => {
   };
 
    // Delete a task
-  const deleteTask = (index) => {
-    const newTasks = tasks.filter((_, i) => i !== index);// _ → means the current element (we’re not using it, so we name it _ as a placeholder).
+  const deleteTask = (itemtoDelete) => {
+    const newTasks = tasks.filter((element) => element!== itemtoDelete);// _ → means the current element (we’re not using it, so we name it _ as a placeholder).
     setTasks(newTasks);
   };
 
@@ -39,9 +39,13 @@ const  ToDoList = () => {
        
         <ul>
         {/* {tasks.length === 0 && <p>No tasks yet!</p>} */}
-        {tasks.map((t, index) => (
-          <li key={index}>{t}
-          <button onClick={() => deleteTask(index)}>Delete</button>
+        {tasks.map((item, index) => (
+          <li key={index}>{item}
+          <button onClick={() => deleteTask(item)}>Delete</button>{/* Why we need to pass item
+
+When the Delete button is clicked, we want to tell React which task to delete.
+
+That’s why we pass it as an argument: */}
           </li>
         ))}
       </ul>
@@ -101,3 +105,62 @@ Because value={task}, the textbox shows the latest value
 🔁 The full loop looks like this:
 You type in input → onChange runs → setTask updates state → 
 React re-renders → input shows new task value (value={task}) */
+
+
+
+
+
+// delete explaination
+
+/* Step-by-step — What happens when you click “Delete”
+
+Let’s say your list looks like this:
+
+tasks = ["Learn React", "Buy Milk", "Go Running"]
+
+
+React will render three list items with three buttons:
+1️⃣ “Delete” button next to "Learn React"
+2️⃣ “Delete” button next to "Buy Milk"
+3️⃣ “Delete” button next to "Go Running"
+
+🖱️ Now, when you click the second Delete button
+
+This line runs:
+
+onClick={() => deleteTask(item)}
+
+
+At that moment:
+
+item = "Buy Milk"
+
+So it actually calls:
+
+deleteTask("Buy Milk")
+
+🧩 Inside the deleteTask function
+const deleteTask = (taskToDelete) => {
+  const newTasks = tasks.filter(task => task !== taskToDelete);
+  setTasks(newTasks);
+};
+
+
+Here:
+
+taskToDelete = "Buy Milk"
+
+tasks.filter(task => task !== taskToDelete)
+means “keep everything except the one that equals 'Buy Milk'”.
+
+So it creates:
+
+newTasks = ["Learn React", "Go Running"]
+
+
+Then:
+
+setTasks(newTasks);
+
+
+👉 React updates the UI to show only the remaining two tasks. */
